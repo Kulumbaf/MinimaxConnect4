@@ -18,15 +18,12 @@ class Minimax:
     def update_board(self, board, player):
         mask, position, human = '', '', ''
         for j in range(11, -1, -1):
-            mask += '0'
             position += '0'
             human += '0'
             #start with the upper row
             for i in range(6):
-                mask += ['0', '1'][board[i, j] != 0]
                 position += ['0', '1'][board[i, j] == player]
                 human += ['0', '1'][board[i, j] == 1]
-        self.mask = int(mask, 2)
         self.position = int(position, 2)
         self.human = int(human, 2)
 
@@ -36,7 +33,7 @@ class Minimax:
         if check & (check >> 14) : return True
 
         #Diagonal \
-        check = self.position & (self.position)
+        check = self.position & (self.position >> 6)
         if check & (check >> 12) : return True
 
         #Diagonal /
@@ -53,7 +50,7 @@ class Minimax:
         if check & (check >> 14) : return True
 
         #Diagonal \
-        check = self.human & (self.human)
+        check = self.human & (self.human >> 6)
         if check & (check >> 12) : return True
 
         #Diagonal /
@@ -67,30 +64,35 @@ class Minimax:
         return False
     
     def make_move(self, col, maxPlayer):
+        print(self.moves)
         if maxPlayer :
-            self.position = self.position ^ self.mask #apply a XOR
-            self.mask = self.mask | (self.mask + (1 << (col*7)))
+            self.position = self.position | (self.position + (1 << (col*7)))
+            self.playerCount['computer'] += 1
             #return newPosition, newMask
         else :
-            self.human = self.human ^ self.mask #apply a XOR
-            self.mask = self.mask | (self.mask + (1 << (col*7)))
+            self.human = self.human | (self.human + (1 << (col*7)))
+            self.playerCount['human'] += 1
             #return newPosition, newMask
+        self.moves[str(col)] += 1
     
     def undo_move(self, col, maxPlayer):
         if maxPlayer :
-            self.mask = self.mask & (self.mask + (1 << (col*7)))
-            self.position = self.position ^ self.mask
-            #return newPosition, self.self.mask
+            mask = 1 << (col*7 + self.moves[str(col)] - 1)
+            self.position = self.position ^ mask #apply a XOR
+            self.playerCount['computer'] -= 1
+            #return newPosition, newMask
         else :
-            self.mask = self.mask & (self.mask + (1 << (col*7)))
-            self.human = self.human ^ self.mask
-            #return newPosition, self.self.mask
+            mask = 1 << (col*7 + self.moves[str(col)] - 1)
+            self.human = self.human ^ mask #apply a XOR
+            self.playerCount['human'] -= 1
+            #return newPosition, newMask
+        self.moves[str(col)] -= 1
 
     def actions(self):
-        return [int(column) for column in self.moves if self.moves[column] <= 6]
+        return [int(column) for column in self.moves if self.moves[column] < 6]
     
     def utility(self, computer=True):
-        return -(37 - self.moves['human']) if computer else (37 - self.moves['computer'])
+        return -(37 - self.playerCount['human']) if computer else (37 - self.playerCount['computer'])
 
     def minimax(self, depth, alpha, beta, maxPlayer):
         if depth==0 or self.connected_four():
@@ -110,6 +112,7 @@ class Minimax:
                 if maxScore[1] >= beta : 
                     return maxScore
                 alpha = max(alpha, maxScore[1])
+            print(maxScore)
             return maxScore
         else :
             minScore = [-1, +inf]
