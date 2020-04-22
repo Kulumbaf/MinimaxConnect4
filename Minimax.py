@@ -14,8 +14,6 @@ class Minimax:
         [self.moves[str(k)] for k in range(12)]
 
     def update_board(self, board, player):
-        self.positionStates = []  #keeps track of AI board configuration
-        self.boardStates = [] #keeps track of the mask
         self.playerCount['human'] = 0
         self.playerCount['computer'] = 0
         mask, position = '', ''
