@@ -130,7 +130,7 @@ while not game_over:
 			# # Ask for Player 2 Input
 			else:
 				ai.update_board(np.flip(board, 0), 2)
-				col = ai.minimax(5, -math.inf, math.inf, True)[0]
+				col = ai.minimax(8, -math.inf, math.inf, True)[0]
 				print(col)
 
 				if is_valid_location(board, col):
