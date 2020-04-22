@@ -94,8 +94,6 @@ pygame.display.update()
 
 myfont = pygame.font.SysFont("monospace", 75)
 
-depth = 72
-
 while not game_over:
 
 	for event in pygame.event.get():
@@ -113,7 +111,7 @@ while not game_over:
 
 		if event.type == pygame.MOUSEBUTTONDOWN:
 			pygame.draw.rect(screen, BLACK, (0,0, width, SQUARESIZE))
-			#print(event.pos)
+			
 			# Ask for Player 1 Input
 			if turn == 0:
 				posx = event.pos[0]
@@ -122,8 +120,6 @@ while not game_over:
 				if is_valid_location(board, col):
 					row = get_next_open_row(board, col)
 					drop_piece(board, row, col, 1)
-					ai.make_move(col, False)
-					depth -= 1
 
 					if winning_move(board, 1):
 						label = myfont.render("Player 1 wins!!", 1, RED)
@@ -133,19 +129,19 @@ while not game_over:
 
 			# # Ask for Player 2 Input
 			else:
-				col = ai.minimax(depth, -math.inf, math.inf, True)[0]
+				ai.update_board(np.flip(board, 0), 2)
+				col = ai.minimax(5, -math.inf, math.inf, True)[0]
+				print(col)
 
 				if is_valid_location(board, col):
 					row = get_next_open_row(board, col)
 					drop_piece(board, row, col, 2)
-					ai.make_move(col, True)
-					depth -= 1
 
 					if winning_move(board, 2):
 						label = myfont.render("Player 2 wins!!", 1, YELLOW)
 						screen.blit(label, (40,10))
 						game_over = True
-
+			
 			print_board(board)
 			draw_board(board)
 
