@@ -119,7 +119,7 @@ def count_set_bits(self, check):
 * Finally, huge thanks to [@charlyalizadeh] for letting me now about the bit boards as a way to lead this project.
 
 [the Minimax algorithm]: https://www.youtube.com/watch?v=l-hh51ncgDI
-[this article that I wrote]:
+[this article that I wrote]: https://kulumbaf.github.io/FrancisRepository/
 [my web page]: https://kulumbaf.github.io/FrancisRepository/
 [solved game]: https://en.wikipedia.org/wiki/Connect_Four#Mathematical_solution
 [a bitboard]: https://www.youtube.com/watch?v=MzfQ8H16n0M&t=221s
@@ -127,7 +127,7 @@ def count_set_bits(self, check):
 [Numpy]: https://www.scipy.org/install.html
 [PYGAME]: https://www.pygame.org/wiki/GettingStarted
 [interesting article]: https://towardsdatascience.com/creating-the-perfect-connect-four-ai-bot-c165115557b0
-[go here]: 
+[go here]: https://kulumbaf.github.io/FrancisRepository/
 [@KeithGalli]: https://github.com/KeithGalli
 [his connect 4 game]: https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
 [here]: https://www.youtube.com/watch?v=MMLtza3CZFM&t=109s
