@@ -20,6 +20,7 @@ class Minimax:
     def update_board(self, board, player):
         '''
         This function init the bitboard and track the number of tokens per column
+        This code comes from the article found on Medium
         '''
         self.playerCount['human'] = 0
         self.playerCount['computer'] = 0
@@ -52,6 +53,9 @@ class Minimax:
         return count 
 
     def connected_four(self, position):
+        '''
+        This code comes from the article found on Medium
+        '''
         #Horizontal check
         check = position & (position >> 7)
         if check & (check >> 14) : 
@@ -325,17 +329,17 @@ class Minimax:
         '''
         return [int(column) for column in self.moves if self.moves[column] < 6] #Only if 5 pieces or less have been played in this column
     
-    def utility(self, depth, mask, position, maxPlayer):
+    def utility(self, mask, position, maxPlayer):
         '''
-        Heuristic function, better detailled on my website
+        Heuristic function, better detailed on my website
         '''
         computer = position if maxPlayer else (position ^ mask)
         human = position if not maxPlayer else (position ^ mask)
         
         if self.connected_four(computer):
-            return (10000 - (self.maxDepth - depth))
+            return (10000 - (self.maxDepth - self.playerCount['computer']))
         if self.connected_four(human):
-            return -(10000 - (self.maxDepth - depth))
+            return -(10000 - (self.maxDepth - self.playerCount['human']))
         else:
             numberOfThrees = self.connected_three(computer, human, maxPlayer)
             numberOfTwos = self.connected_two(computer, human, maxPlayer)
@@ -352,7 +356,7 @@ class Minimax:
             position = deepcopy(self.position)
         
         if depth == 0 or self.connected_four(position):
-            score = self.utility(depth, mask, position, maxPlayer)
+            score = self.utility(mask, position, maxPlayer)
             return [-1, score]
         
         if maxPlayer:

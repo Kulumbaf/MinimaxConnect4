@@ -5,7 +5,7 @@ import sys
 import math
 
 '''
-Please note that this is not my function. I took it on a repository since I didn't want to code the front-end (it's not the focus of this project).
+Please note that this is not my function. I took it from a repository since I didn't want to code the front-end (it's not the focus of this project).
 All the credits are in the README and in my website.
 If you want to understant how this connect 4 game works, go on the original GitHub.
 '''
