@@ -5,16 +5,22 @@ from collections import defaultdict
 
 class Minimax:
     def __init__(self, board, player):
-        self.maxDepth = 6
+        self.maxDepth = 6 #The AI will see 6 plays further
         self.configure_dict()
         self.update_board(board, player)
 
     def configure_dict(self):
+        '''
+        We will use default dict to keep track of the moves and avoid the AI to play on a full column
+        '''
         self.moves = defaultdict(int)
         self.playerCount = defaultdict(int)
         [self.moves[str(k)] for k in range(12)]
 
     def update_board(self, board, player):
+        '''
+        This function init the bitboard and track the number of tokens per column
+        '''
         self.playerCount['human'] = 0
         self.playerCount['computer'] = 0
         mask, position = '', ''
@@ -301,6 +307,9 @@ class Minimax:
         return numberOfTwos
 
     def make_move(self, col, mask, position, maxPlayer):
+        '''
+        This function add a token on the top of the bitboard and update the position board to be the opponent's one
+        '''
         newPosition = position ^ mask #opponents turn, we switch to his board
         newMask = mask | (mask + (1 << (col*7)))
         if maxPlayer :
@@ -311,9 +320,15 @@ class Minimax:
         return newMask, newPosition
     
     def actions(self):
+        '''
+        Here we verify in the dictionnaries if a column is full of token or not and thus return the possible moves
+        '''
         return [int(column) for column in self.moves if self.moves[column] < 6] #Only if 5 pieces or less have been played in this column
     
     def utility(self, depth, mask, position, maxPlayer):
+        '''
+        Heuristic function, better detailled on my website
+        '''
         computer = position if maxPlayer else (position ^ mask)
         human = position if not maxPlayer else (position ^ mask)
         
@@ -327,6 +342,11 @@ class Minimax:
             return (3*numberOfThrees[0] + numberOfTwos[0] - (3*numberOfThrees[1] + numberOfTwos[1]))
 
     def minimax(self, depth, alpha, beta, maxPlayer, mask=None, position=None):
+        '''
+        this minimax recursive function, test 6 moves further and call the utility function to score the boards.
+        It then, take the best rated board and goes up on the tree to return the column to play in order to reach this specific board
+        We assume that the opponent plays perfectly
+        '''
         if mask == None:
             mask = deepcopy(self.mask)
             position = deepcopy(self.position)
