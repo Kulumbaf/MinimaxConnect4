@@ -5,6 +5,7 @@ from collections import defaultdict
 
 class Minimax:
     def __init__(self, board, player):
+        self.maxDepth = 6
         self.configure_dict()
         self.update_board(board, player)
 
@@ -29,10 +30,20 @@ class Minimax:
                     self.moves[str(j)] += 1
                     if board[i, j] == 1:
                         self.playerCount['human'] += 1
-                    else :
+                    elif board[i, j] == 2 :
                         self.playerCount['computer'] += 1
         self.position = int(position, 2)
         self.mask = int(mask, 2)
+
+    def count_set_bits(self, check):
+        '''
+        This fonction count the number of bits set to one in a binary representation of an integer
+        '''
+        count = 0
+        while (check): 
+            count += check & 1
+            check >>= 1
+        return count 
 
     def connected_four(self, position):
         #Horizontal check
@@ -57,9 +68,241 @@ class Minimax:
 
         return False
     
+    def connected_three(self, computer, human, maxPlayer):
+        '''
+        Return the number of dangerous 3 in a row (not blocked yet)
+        '''
+        numberOfThrees = [0, 0]
+
+        #Horizontal check
+        check = computer & (computer >> 7)
+        check = check & (check >> 7)
+        check = check >> 7
+        comparator = check & human
+        check = check - comparator
+        numberOfThrees[0] += self.count_set_bits(check)
+        #Horizontal check backward
+        check = computer & (computer << 7)
+        check = check & (check << 7)
+        check = check << 7
+        comparator = check & human
+        check = check - comparator
+        numberOfThrees[0] += self.count_set_bits(check)
+        #human
+        check = human & (human >> 7)
+        check = check & (check >> 7)
+        check = check >> 7
+        comparator = check & computer
+        check = check - comparator
+        numberOfThrees[1] += self.count_set_bits(check)
+        #human backward
+        check = human & (human << 7)
+        check = check & (check << 7)
+        check = check << 7
+        comparator = check & computer
+        check = check - comparator
+        numberOfThrees[1] += self.count_set_bits(check)
+
+        #Diagonal check \
+        check = computer & (computer >> 6)
+        check = check & (check >> 6)
+        check = check >> 6
+        comparator = check & human
+        check = check - comparator
+        numberOfThrees[0] += self.count_set_bits(check)
+        #Horizontal check backward
+        check = computer & (computer << 6)
+        check = check & (check << 6)
+        check = check << 6
+        comparator = check & human
+        check = check - comparator
+        numberOfThrees[0] += self.count_set_bits(check)
+        #human
+        check = human & (human >> 6)
+        check = check & (check >> 6)
+        check = check >> 6
+        comparator = check & computer
+        check = check - comparator
+        numberOfThrees[1] += self.count_set_bits(check)
+        #human backward
+        check = human & (human << 6)
+        check = check & (check << 6)
+        check = check << 6
+        comparator = check & computer
+        check = check - comparator
+        numberOfThrees[1] += self.count_set_bits(check)
+
+        #Diagonal check /
+        check = computer & (computer >> 8)
+        check = check & (check >> 8)
+        check = check >> 8
+        comparator = check & human
+        check = check - comparator
+        numberOfThrees[0] += self.count_set_bits(check)
+        #Horizontal check backward
+        check = computer & (computer << 8)
+        check = check & (check << 8)
+        check = check << 8
+        comparator = check & human
+        check = check - comparator
+        numberOfThrees[0] += self.count_set_bits(check)
+        #human
+        check = human & (human >> 8)
+        check = check & (check >> 8)
+        check = check >> 8
+        comparator = check & computer
+        check = check - comparator
+        numberOfThrees[1] += self.count_set_bits(check)
+        #human backward
+        check = human & (human << 8)
+        check = check & (check << 8)
+        check = check << 8
+        comparator = check & computer
+        check = check - comparator
+        numberOfThrees[1] += self.count_set_bits(check)
+
+        #Vertical check 
+        check = computer & (computer >> 1)
+        check = check & (check >> 1)
+        check = check >> 1
+        comparator = check & human
+        check = check - comparator
+        numberOfThrees[0] += self.count_set_bits(check)
+        #Horizontal check backward
+        check = computer & (computer << 1)
+        check = check & (check << 1)
+        check = check << 1
+        comparator = check & human
+        check = check - comparator
+        numberOfThrees[0] += self.count_set_bits(check)
+        #human
+        check = human & (human >> 1)
+        check = check & (check >> 1)
+        check = check >> 1
+        comparator = check & computer
+        check = check - comparator
+        numberOfThrees[1] += self.count_set_bits(check)
+        #human backward
+        check = human & (human << 1)
+        check = check & (check << 1)
+        check = check << 1
+        comparator = check & computer
+        check = check - comparator
+        numberOfThrees[1] += self.count_set_bits(check)
+
+        return numberOfThrees
+        
+    def connected_two(self, computer, human, maxPlayer):
+        '''
+        Return the number of dangerous two in a row (a 3 in a row count as 2)
+        '''
+        numberOfTwos = [0, 0]
+
+        #Horizontal check
+        check = computer & (computer >> 7)
+        check = check >> 7
+        comparator = check & human
+        check = check - comparator
+        numberOfTwos[0] += self.count_set_bits(check)
+        #Horizontal check backward
+        check = computer & (computer << 7)
+        check = check << 7
+        comparator = check & human
+        check = check - comparator
+        numberOfTwos[0] += self.count_set_bits(check)
+        #human
+        check = human & (human >> 7)
+        check = check >> 7
+        comparator = check & computer
+        check = check - comparator
+        numberOfTwos[1] += self.count_set_bits(check)
+        #human backward
+        check = human & (human << 7)
+        check = check << 7
+        comparator = check & computer
+        check = check - comparator
+        numberOfTwos[1] += self.count_set_bits(check)
+
+        #Diagonal check \
+        check = computer & (computer >> 6)
+        check = check >> 6
+        comparator = check & human
+        check = check - comparator
+        numberOfTwos[0] += self.count_set_bits(check)
+        #Horizontal check backward
+        check = computer & (computer << 6)
+        check = check << 6
+        comparator = check & human
+        check = check - comparator
+        numberOfTwos[0] += self.count_set_bits(check)
+        #human
+        check = human & (human >> 6)
+        check = check >> 6
+        comparator = check & computer
+        check = check - comparator
+        numberOfTwos[1] += self.count_set_bits(check)
+        #human backward
+        check = human & (human << 6)
+        check = check << 6
+        comparator = check & computer
+        check = check - comparator
+        numberOfTwos[1] += self.count_set_bits(check)
+
+        #Diagonal check /
+        check = computer & (computer >> 8)
+        check = check >> 8
+        comparator = check & human
+        check = check - comparator
+        numberOfTwos[0] += self.count_set_bits(check)
+        #Horizontal check backward
+        check = computer & (computer << 8)
+        check = check << 8
+        comparator = check & human
+        check = check - comparator
+        numberOfTwos[0] += self.count_set_bits(check)
+        #human
+        check = human & (human >> 8)
+        check = check >> 8
+        comparator = check & computer
+        check = check - comparator
+        numberOfTwos[1] += self.count_set_bits(check)
+        #human backward
+        check = human & (human << 8)
+        check = check << 8
+        comparator = check & computer
+        check = check - comparator
+        numberOfTwos[1] += self.count_set_bits(check)
+
+        #Vertical check 
+        check = computer & (computer >> 1)
+        check = check >> 1
+        comparator = check & human
+        check = check - comparator
+        numberOfTwos[0] += self.count_set_bits(check)
+        #Horizontal check backward
+        check = computer & (computer << 1)
+        check = check << 1
+        comparator = check & human
+        check = check - comparator
+        numberOfTwos[0] += self.count_set_bits(check)
+        #human
+        check = human & (human >> 1)
+        check = check >> 1
+        comparator = check & computer
+        check = check - comparator
+        numberOfTwos[1] += self.count_set_bits(check)
+        #human backward
+        check = human & (human << 1)
+        check = check << 1
+        comparator = check & computer
+        check = check - comparator
+        numberOfTwos[1] += self.count_set_bits(check)
+
+        return numberOfTwos
+
     def make_move(self, col, mask, position, maxPlayer):
-        newPosition = position ^ mask
-        newMask = mask | (mask + (1 << (col*7))) #opponents turn, we switch to his board
+        newPosition = position ^ mask #opponents turn, we switch to his board
+        newMask = mask | (mask + (1 << (col*7)))
         if maxPlayer :
             self.playerCount['computer'] += 1
         else :
@@ -70,8 +313,18 @@ class Minimax:
     def actions(self):
         return [int(column) for column in self.moves if self.moves[column] < 6] #Only if 5 pieces or less have been played in this column
     
-    def utility(self, maxPlayer):#inverser
-        pass
+    def utility(self, depth, mask, position, maxPlayer):
+        computer = position if maxPlayer else (position ^ mask)
+        human = position if not maxPlayer else (position ^ mask)
+        
+        if self.connected_four(computer):
+            return (10000 - (self.maxDepth - depth))
+        if self.connected_four(human):
+            return -(10000 - (self.maxDepth - depth))
+        else:
+            numberOfThrees = self.connected_three(computer, human, maxPlayer)
+            numberOfTwos = self.connected_two(computer, human, maxPlayer)
+            return (3*numberOfThrees[0] + numberOfTwos[0] - (3*numberOfThrees[1] + numberOfTwos[1]))
 
     def minimax(self, depth, alpha, beta, maxPlayer, mask=None, position=None):
         if mask == None:
@@ -79,9 +332,7 @@ class Minimax:
             position = deepcopy(self.position)
         
         if depth == 0 or self.connected_four(position):
-            score = self.utility(maxPlayer)
-            if score < 0 :
-                print(score)
+            score = self.utility(depth, mask, position, maxPlayer)
             return [-1, score]
         
         if maxPlayer:
