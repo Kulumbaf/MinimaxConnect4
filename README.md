@@ -89,16 +89,16 @@ def connected_four(self, position):
 
 ## HEURISTIC
 I've decided to take a simple heuristic. I'll will briefly explain how it's working here but if you want detailed explanation, [go here].
-My heuristic simply count the number of dangerous connected 4 and connected 2 played per each player. What I mean by "dangerous" is that, the connected n is not blocked yet. So my heuristic function can be written as : _H(board) = 3*computerNumberOfThrees + computerNumberOfTwos - (3*humanNumberOfThrees + humanNumberOfTwos)_ if there is no connected 4, else if there is computer connected 4 _H(board) = 10 000 - numberOfTokenPlayed_ else _H(board) = -(10 000 - NumberOfTokenPlayed)_. We assign a weight to the amount of connected 3 since it's a more dangerous state to take into consideration by the computer.
+My heuristic simply count the number of dangerous connected 4 and connected 2 played per each player. What I mean by "dangerous" is that, the connected n is not blocked yet. So my heuristic function can be written as : _H(board) = 3 x computerNumberOfThrees + computerNumberOfTwos - (3 x humanNumberOfThrees + humanNumberOfTwos)_ if there is no connected 4, else if there is computer connected 4 _H(board) = 10 000 - numberOfTokenPlayed_ else _H(board) = -(10 000 - NumberOfTokenPlayed)_. We assign a weight to the amount of connected 3 since it's a more dangerous state to take into consideration by the computer.
 Here is an example : the yellow tokens are played by the computer (maximazing player) and the red ones by the human.
 So what would be the grade of this particular board state ?
 ![](assets/board1.png)
 This board is not an end-game state so we use the first heuristic formula. We can notice that there is one dangerous connected 2 played by the computer (on the diagonal /) and 0 dangerous connected 3. On the other hand, the human has one dangerous connected 3 that need to ble blocked, but also one dangerous connected 2 implied by the connected 4. So we can rate this board state this way :
-_H(board1) = 3 * 0 + 1 - (3 * 1 + 1) = -3_
+_H(board1) = 3 x 0 + 1 - (3 x 1 + 1) = -3_
 This board is in our disadvantage since we want to maximaze our score. Something needs to be done. In order to avoid to loose, the computer now block the human, let's see how the board is now rated.
 ![](assets/board2.png)
 Now there is one dangerous connected 2 played by the computer and 0 connected 0. However, there isn't any dangerous connected 3 nor connected 2 played by the human anymore, so we have :
-_H(board2) = 3 * 0 + 1 - (3 * 0 + 0) = 1_
+_H(board2) = 3 x 0 + 1 - (3 x 0 + 0) = 1_
 This board is now in our advantage.
 
 ## CREDITS
