@@ -1,20 +1,20 @@
 # MinimaxConnect4
 ###### EN
-AI that can play connect 4 on a 12x6 board, using Minimax algorithm and a bitboard.
+AI that can play connect 4 on a 12x6 board, using the Minimax algorithm on a bitboard.
 Please note that in this README, I'll consider that you know what a bitboard is and that you have a good understanding of [the Minimax algorithm]. For more detailed information, read [this article that I wrote] on [my web page].
 **_Also, some part of my algorithm or codes that I picked up in other repositories : all the credits can be found below._**
 
 ## INTRODUCTION
-A standard connect 4 game (on a 7x6 board) allow a total of 4,531,985,219,092 board configurations. Although it's a [solved game], computaing all these possible board states is close to impossible with our commun PC/laptop. This is getting way more harderon a 1x6 board. Thus, we will need a board representation that needs low calculations and also a way to rate each board state quickly without having to reach an endgame point with the Minimax algorithm. The solution that came to me was using [a bitboard] to represent each board state and a [heuristic function] to rate it.
+A standard connect 4 game (on a 7x6 board) allow a total of 4,531,985,219,092 board configurations. Although it's a [solved game], computaing all these possible board states is close to impossible with our common PC/laptop. This is getting way more harder on a 12x6 board. Thus, we will need a board representation that needs low calculations and also a way to rate each board state quickly without having to reach an endgame point with the Minimax algorithm. The solution that came to me was to use [a bitboard] in order to represent each board state and a [heuristic function] to rate it.
 
 ## NECESSARIES
-In order to use this code you'll need to have installed differents packages that are running on Python 3 : Numpy and Pygame.
+In order to use this code you'll need to have installed different packages that are running on Python 3 : Numpy and Pygame.
 I let you check their website in order to install properly these packages.
 * [Numpy]
 * [PYGAME]
 
 ## BITBOARD
-I came accross this [interesting article] on TDS that cover the bitboard representation on the connect 4 game on a standard connect 4 game (you should read it before going further).I then decided to apply it to my code and to my 12x6 board. I've now coded it with objects.
+I came accross this [interesting article] on TDS that covering the bitboard representation on the connect 4 game on a standard connect 4 game (you should read it before going further).Then, I have decided to apply it to my code on my 12x6 board. I've also coded it with objects.
 I've changed the way to update the board, this function also tracks the number of token played per column while updating the mask and the position.
 ```python
 def update_board(self, board, player):
@@ -42,8 +42,8 @@ def update_board(self, board, player):
         self.position = int(position, 2)
         self.mask = int(mask, 2)
 ```
-As you can see I use dictionnaries to keeps track of what's happening in each column since it's a more convenient and faster way to do so.
-I also needed to change the make_move() function in order to keeps track of the the amount of token played for each participant.
+As you can see I use dictionnaries to keep track of what's happening in each column since it's a more convenient and faster way to do so.
+I also needed to change the make_move() function in order to keep track of the the amount of tokens played by each participant.
 ```python
 def make_move(self, col, mask, position, maxPlayer):
         '''
@@ -58,7 +58,7 @@ def make_move(self, col, mask, position, maxPlayer):
         self.moves[str(col)] += 1
         return newMask, newPosition
 ```
-Finally, I didn't have to change the way of checking for connected 4 since I have the same amount of rows as a standard column four.
+Finally, I didn't have to change the way of checking for connected 4 on the board since I have the same amount of rows as a standard connect four.
 ```python
 def connected_four(self, position):
         '''
@@ -88,17 +88,23 @@ def connected_four(self, position):
 ```
 
 ## HEURISTIC
-I've decided to take a simple heuristic. I'll will briefly explain how it's working here but if you want detailed explanation, [go here].
-My heuristic simply count the number of dangerous connected 4 and connected 2 played per each player. What I mean by "dangerous" is that, the connected n is not blocked yet. So my heuristic function can be written as : _H(board) = 3 x computerNumberOfThrees + computerNumberOfTwos - (3 x humanNumberOfThrees + humanNumberOfTwos)_ if there is no connected 4, else if there is computer connected 4 _H(board) = 10 000 - numberOfTokenPlayed_ else _H(board) = -(10 000 - NumberOfTokenPlayed)_. We assign a weight to the amount of connected 3 since it's a more dangerous state to take into consideration by the computer.
+I've decided to take a simple heuristic. I will briefly explain how it's working here but if you want detailed explanation, [go here].
+My heuristic simply count the number of dangerous connected 4 and connected 2 played per each player. What I mean by "dangerous" is that, the connected n is not blocked yet. So my heuristic function can be written as : 
+`H(board) = 3 x computerNumberOfThrees + computerNumberOfTwos - (3 x humanNumberOfThrees + humanNumberOfTwos)`
+if there is no connected 4, else if there is computer connected 4 
+`H(board) = 10 000 - numberOfTokenPlayed` 
+else 
+`H(board) = -(10 000 - NumberOfTokenPlayed)` 
+We assign a weight to the amount of connected 3 since it's a more dangerous state to take into consideration by the computer.
 Here is an example : the yellow tokens are played by the computer (maximazing player) and the red ones by the human.
 So what would be the grade of this particular board state ?
 ![](assets/board1.png)
 This board is not an end-game state so we use the first heuristic formula. We can notice that there is one dangerous connected 2 played by the computer (on the diagonal /) and 0 dangerous connected 3. On the other hand, the human has one dangerous connected 3 that need to ble blocked, but also one dangerous connected 2 implied by the connected 4. So we can rate this board state this way :
-_H(board1) = 3 x 0 + 1 - (3 x 1 + 1) = -3_
+`H(board1) = 3 x 0 + 1 - (3 x 1 + 1) = -3`
 This board is in our disadvantage since we want to maximaze our score. Something needs to be done. In order to avoid to loose, the computer now block the human, let's see how the board is now rated.
 ![](assets/board2.png)
 Now there is one dangerous connected 2 played by the computer and 0 connected 0. However, there isn't any dangerous connected 3 nor connected 2 played by the human anymore, so we have :
-_H(board2) = 3 x 0 + 1 - (3 x 0 + 0) = 1_
+`H(board2) = 3 x 0 + 1 - (3 x 0 + 0) = 1`
 This board is now in our advantage.
 
 ## CREDITS
@@ -108,7 +114,7 @@ This board is now in our advantage.
 ```python
 def count_set_bits(self, check):
         '''
-        This fonction count the number of bits set to one in a binary representation of an integer
+        This function count the number of bits set to one in a binary representation of an integer
         '''
         count = 0
         while (check): 

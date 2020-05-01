@@ -44,7 +44,7 @@ class Minimax:
 
     def count_set_bits(self, check):
         '''
-        This fonction count the number of bits set to one in a binary representation of an integer
+        This function count the number of bits set to one in a binary representation of an integer
         '''
         count = 0
         while (check): 
