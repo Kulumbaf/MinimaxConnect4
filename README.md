@@ -113,9 +113,6 @@ This board is now in our advantage.
 * I've used a code from [GeeksForGeeks] to count the number of set bits on an integer.
 ```python
 def count_set_bits(self, check):
-        '''
-        This function count the number of bits set to one in a binary representation of an integer
-        '''
         count = 0
         while (check): 
             count += check & 1
@@ -125,10 +122,10 @@ def count_set_bits(self, check):
 * Finally, huge thanks to [@charlyalizadeh] for letting me now about the bit boards as a way to lead this project.
 
 [the Minimax algorithm]: https://www.youtube.com/watch?v=l-hh51ncgDI
-[this article that I wrote]: https://kulumbaf.github.io/FrancisRepository/
+[this article that I wrote]: https://kulumbaf.github.io/FrancisRepository/posts/minimax-connect4/
 [my web page]: https://kulumbaf.github.io/FrancisRepository/
 [solved game]: https://en.wikipedia.org/wiki/Connect_Four#Mathematical_solution
-[a bitboard]: https://www.youtube.com/watch?v=MzfQ8H16n0M&t=221s
+[a bitboard]: https://www.youtube.com/watch?v=MzfQ8H16n0M
 [heuristic function]: https://en.wikipedia.org/wiki/Heuristic_(computer_science)
 [Numpy]: https://www.scipy.org/install.html
 [PYGAME]: https://www.pygame.org/wiki/GettingStarted
@@ -136,7 +133,7 @@ def count_set_bits(self, check):
 [go here]: https://kulumbaf.github.io/FrancisRepository/
 [@KeithGalli]: https://github.com/KeithGalli
 [his connect 4 game]: https://github.com/KeithGalli/Connect4-Python/blob/master/connect4.py
-[here]: https://www.youtube.com/watch?v=MMLtza3CZFM&t=109s
+[here]: https://www.youtube.com/watch?v=MMLtza3CZFM&
 [this article]: https://roadtolarissa.com/connect-4-ai-how-it-works/
 [GeeksForGeeks]: https://www.geeksforgeeks.org/count-set-bits-in-an-integer/
 [@charlyalizadeh]: https://github.com/charlyalizadeh
