@@ -20,6 +20,14 @@ COLUMN_COUNT = 12
 
 def create_board():
 	board = np.zeros((ROW_COUNT,COLUMN_COUNT))
+	'''
+	board = np.array([[0, 0, 0, 2, 2, 1, 0, 0, 0, 0, 0, 0],
+					[0, 0, 0, 0, 0, 2, 0, 0, 0, 0 , 0, 0],
+					[0, 0, 0, 0, 0, 1, 0, 0, 0, 0 , 0, 0],
+					[0, 0, 0, 0, 0, 1, 0, 0, 0, 0 , 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0],
+					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0]],)
+	'''
 	return board
 
 def drop_piece(board, row, col, piece):

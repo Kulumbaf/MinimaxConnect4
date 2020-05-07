@@ -78,7 +78,7 @@ class Minimax:
 
         return False
     
-    def connected_three(self, computer, human, maxPlayer):
+    def connected_three(self, computer, human):
         '''
         Return the number of dangerous 3 in a row (not blocked yet)
         '''
@@ -114,87 +114,63 @@ class Minimax:
         numberOfThrees[1] += self.count_set_bits(check)
 
         #Diagonal check \
-        check = computer & (computer >> 6)
-        check = check & (check >> 6)
+        check = computer & (computer >> 12)
         check = check >> 6
         comparator = check & human
         check = check - comparator
         numberOfThrees[0] += self.count_set_bits(check)
-        #Horizontal check backward
-        check = computer & (computer << 6)
-        check = check & (check << 6)
+        #Backward
+        check = computer & (computer << 12)
         check = check << 6
         comparator = check & human
         check = check - comparator
         numberOfThrees[0] += self.count_set_bits(check)
         #human
-        check = human & (human >> 6)
-        check = check & (check >> 6)
+        check = human & (human >> 12)
         check = check >> 6
         comparator = check & computer
         check = check - comparator
         numberOfThrees[1] += self.count_set_bits(check)
-        #human backward
-        check = human & (human << 6)
-        check = check & (check << 6)
+        #backward
+        check = human & (human << 12)
         check = check << 6
         comparator = check & computer
         check = check - comparator
         numberOfThrees[1] += self.count_set_bits(check)
 
         #Diagonal check /
-        check = computer & (computer >> 8)
-        check = check & (check >> 8)
+        check = computer & (computer >> 16)
         check = check >> 8
         comparator = check & human
         check = check - comparator
         numberOfThrees[0] += self.count_set_bits(check)
-        #Horizontal check backward
-        check = computer & (computer << 8)
-        check = check & (check << 8)
+        #Backward
+        check = computer & (computer << 16)
         check = check << 8
         comparator = check & human
         check = check - comparator
         numberOfThrees[0] += self.count_set_bits(check)
         #human
-        check = human & (human >> 8)
-        check = check & (check >> 8)
+        check = human & (human >> 16)
         check = check >> 8
         comparator = check & computer
         check = check - comparator
         numberOfThrees[1] += self.count_set_bits(check)
-        #human backward
-        check = human & (human << 8)
-        check = check & (check << 8)
+        #Backward
+        check = human & (human << 16)
         check = check << 8
         comparator = check & computer
         check = check - comparator
         numberOfThrees[1] += self.count_set_bits(check)
 
         #Vertical check 
-        check = computer & (computer >> 1)
-        check = check & (check >> 1)
-        check = check >> 1
-        comparator = check & human
-        check = check - comparator
-        numberOfThrees[0] += self.count_set_bits(check)
-        #Horizontal check backward
-        check = computer & (computer << 1)
-        check = check & (check << 1)
+        check = computer & (computer << 2)
         check = check << 1
         comparator = check & human
         check = check - comparator
         numberOfThrees[0] += self.count_set_bits(check)
         #human
-        check = human & (human >> 1)
-        check = check & (check >> 1)
-        check = check >> 1
-        comparator = check & computer
-        check = check - comparator
-        numberOfThrees[1] += self.count_set_bits(check)
-        #human backward
-        check = human & (human << 1)
-        check = check & (check << 1)
+        check = human & (human << 2)
         check = check << 1
         comparator = check & computer
         check = check - comparator
@@ -202,7 +178,7 @@ class Minimax:
 
         return numberOfThrees
         
-    def connected_two(self, computer, human, maxPlayer):
+    def connected_two(self, mask, computer, human):
         '''
         Return the number of dangerous two in a row (a 3 in a row count as 2)
         '''
@@ -239,7 +215,7 @@ class Minimax:
         comparator = check & human
         check = check - comparator
         numberOfTwos[0] += self.count_set_bits(check)
-        #Horizontal check backward
+        #Backward
         check = computer & (computer << 6)
         check = check << 6
         comparator = check & human
@@ -251,7 +227,7 @@ class Minimax:
         comparator = check & computer
         check = check - comparator
         numberOfTwos[1] += self.count_set_bits(check)
-        #human backward
+        #Backward
         check = human & (human << 6)
         check = check << 6
         comparator = check & computer
@@ -264,7 +240,7 @@ class Minimax:
         comparator = check & human
         check = check - comparator
         numberOfTwos[0] += self.count_set_bits(check)
-        #Horizontal check backward
+        #Backward
         check = computer & (computer << 8)
         check = check << 8
         comparator = check & human
@@ -276,7 +252,7 @@ class Minimax:
         comparator = check & computer
         check = check - comparator
         numberOfTwos[1] += self.count_set_bits(check)
-        #human backward
+        #Backward
         check = human & (human << 8)
         check = check << 8
         comparator = check & computer
@@ -284,24 +260,12 @@ class Minimax:
         numberOfTwos[1] += self.count_set_bits(check)
 
         #Vertical check 
-        check = computer & (computer >> 1)
-        check = check >> 1
-        comparator = check & human
-        check = check - comparator
-        numberOfTwos[0] += self.count_set_bits(check)
-        #Horizontal check backward
         check = computer & (computer << 1)
         check = check << 1
         comparator = check & human
         check = check - comparator
         numberOfTwos[0] += self.count_set_bits(check)
         #human
-        check = human & (human >> 1)
-        check = check >> 1
-        comparator = check & computer
-        check = check - comparator
-        numberOfTwos[1] += self.count_set_bits(check)
-        #human backward
         check = human & (human << 1)
         check = check << 1
         comparator = check & computer
@@ -334,16 +298,16 @@ class Minimax:
         Heuristic function, better detailed on my website
         '''
         computer = position if maxPlayer else (position ^ mask)
-        human = position if not maxPlayer else (position ^ mask)
+        human = computer ^ mask
         
-        if self.connected_four(computer):
-            return (10000 - (self.maxDepth - self.playerCount['computer']))
         if self.connected_four(human):
-            return -(10000 - (self.maxDepth - self.playerCount['human']))
+            return -(10000 - self.playerCount['human'])
+        if self.connected_four(computer):
+            return (10000 - self.playerCount['computer'])
         else:
-            numberOfThrees = self.connected_three(computer, human, maxPlayer)
-            numberOfTwos = self.connected_two(computer, human, maxPlayer)
-            return (3*numberOfThrees[0] + numberOfTwos[0] - (3*numberOfThrees[1] + numberOfTwos[1]))
+            numberOfThrees = self.connected_three(computer, human)
+            numberOfTwos = self.connected_two(mask, computer, human)
+            return ((10*numberOfThrees[0] + numberOfTwos[0]) - (10*numberOfThrees[1] + numberOfTwos[1]))
 
     def minimax(self, depth, alpha, beta, maxPlayer, mask=None, position=None):
         '''
@@ -370,6 +334,7 @@ class Minimax:
                 self.moves[str(action)] -= 1 #undo the move
                 score[0] = j
                 maxScore = maxScore if maxScore[1] >= score[1] else score
+                print(maxScore)
                 if maxScore[1] >= beta:
                     return maxScore
                 alpha = max(alpha, maxScore[1])
