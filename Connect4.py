@@ -138,7 +138,7 @@ while not game_over:
 			else:
 				ai.update_board(np.flip(board, 0), 2)
 				start = time.perf_counter()
-				col = ai.minimax(6, -math.inf, math.inf, True)[0]
+				col = ai.minimax(5, -math.inf, math.inf, True)[0]
 				finish = time.perf_counter()
 				print(f"AI play :  {col} in {round(finish-start, 2)} seconds")
 
