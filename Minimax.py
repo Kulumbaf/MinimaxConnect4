@@ -2,7 +2,6 @@
 from copy import deepcopy
 from math import inf
 from collections import defaultdict
-import multiprocessing
 
 class Minimax:
     def __init__(self, board, player):
@@ -304,14 +303,8 @@ class Minimax:
         if self.connected_four(computer):
             return (10000 - self.playerCount['computer'])
         else:
-            numberOfThrees = multiprocessing.Process(target=self.connected_three, args=(computer, human,))
-            numberOfTwos = multiprocessing.Process(target=self.connected_two, args=(mask, computer, human,))
-
-            numberOfThrees.start()
-            numberOfTwos.start()
-            numberOfThrees.join()
-            numberOfTwos.join()
-
+            self.connected_three(computer, human)
+            self.connected_two(mask, computer, human)
             return ((10*self.numberOfThrees[0] + self.numberOfTwos[0]) - (10*self.numberOfThrees[1] + self.numberOfTwos[1]))
 
     def minimax(self, depth, alpha, beta, maxPlayer, mask=None, position=None):
@@ -339,7 +332,6 @@ class Minimax:
                 self.moves[str(action)] -= 1 #undo the move
                 score[0] = j
                 maxScore = maxScore if maxScore[1] >= score[1] else score
-                #print(maxScore)
                 if maxScore[1] >= beta:
                     return maxScore
                 alpha = max(alpha, maxScore[1])
