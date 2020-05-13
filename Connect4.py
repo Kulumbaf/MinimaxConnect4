@@ -3,6 +3,7 @@ import numpy as np
 import pygame
 import sys
 import math
+import time
 
 '''
 Please note that this is not my function. I took it from a repository since I didn't want to code the front-end (it's not the focus of this project).
@@ -20,14 +21,6 @@ COLUMN_COUNT = 12
 
 def create_board():
 	board = np.zeros((ROW_COUNT,COLUMN_COUNT))
-	'''
-	board = np.array([[0, 0, 0, 2, 2, 1, 0, 0, 0, 0, 0, 0],
-					[0, 0, 0, 0, 0, 2, 0, 0, 0, 0 , 0, 0],
-					[0, 0, 0, 0, 0, 1, 0, 0, 0, 0 , 0, 0],
-					[0, 0, 0, 0, 0, 1, 0, 0, 0, 0 , 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0],
-					[0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0]],)
-	'''
 	return board
 
 def drop_piece(board, row, col, piece):
@@ -87,7 +80,7 @@ def draw_board(board):
 board = create_board()
 print_board(board)
 game_over = False
-turn = 0
+turn = 0 #Change to 1 for tha AI to start first
 
 ai = Minimax(board, 2) #Player 2 is the maximizing player
 
@@ -144,7 +137,10 @@ while not game_over:
 			# # Ask for Player 2 Input
 			else:
 				ai.update_board(np.flip(board, 0), 2)
+				start = time.perf_counter()
 				col = ai.minimax(6, -math.inf, math.inf, True)[0]
+				finish = time.perf_counter()
+				print(f"AI play :  {col} in {round(finish-start, 2)} seconds")
 
 				if is_valid_location(board, col):
 					row = get_next_open_row(board, col)
